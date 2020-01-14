@@ -26,6 +26,6 @@ import kotlinx.android.synthetic.main.activity_main.*
     }
 
      override fun onSupportNavigateUp(): Boolean {
-         return NavigationUI.navigateUp(null, navController)
+         return NavigationUI.navigateUp(navController,null)
      }
 }

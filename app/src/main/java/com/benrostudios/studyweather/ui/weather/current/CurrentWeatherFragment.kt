@@ -8,6 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.benrostudios.studyweather.R
+import com.benrostudios.studyweather.data.WeatherStackAPIService
+import com.benrostudios.studyweather.data.response.CurrentWeatherResponse
+import kotlinx.android.synthetic.main.current_weather_fragment.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class CurrentWeatherFragment : Fragment() {
 
@@ -28,7 +34,15 @@ class CurrentWeatherFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel::class.java)
+
+
         // TODO: Use the ViewModel
+        val apiService = WeatherStackAPIService()
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val currentWeatherResponse = apiService.getCurrentWeather("London").await()
+            textViewOne.text = currentWeatherResponse.toString()
+        }
     }
 
 }

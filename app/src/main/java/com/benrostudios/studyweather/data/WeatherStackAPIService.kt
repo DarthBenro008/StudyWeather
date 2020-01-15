@@ -1,5 +1,7 @@
 package com.benrostudios.studyweather.data
 
+import com.benrostudios.studyweather.data.response.ConnectityInterceptor
+import com.benrostudios.studyweather.data.response.ConnectityInterceptorImpl
 import com.benrostudios.studyweather.data.response.CurrentWeatherResponse
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
@@ -25,7 +27,9 @@ interface WeatherStackAPIService {
     
     
     companion object{
-        operator fun invoke(): WeatherStackAPIService{
+        operator fun invoke(
+                connectityInterceptor: ConnectityInterceptor
+        ): WeatherStackAPIService{
             // Easier to invoke WeatherStackAPIService()
             val requestInterceptor = Interceptor{
                 chain ->
@@ -43,6 +47,7 @@ interface WeatherStackAPIService {
             }
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(requestInterceptor)
+                .addInterceptor(connectityInterceptor)
                 .build()
             return Retrofit.Builder()
                 .client(okHttpClient)

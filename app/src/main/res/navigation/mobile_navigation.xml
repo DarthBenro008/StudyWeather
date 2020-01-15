@@ -14,7 +14,7 @@
         android:id="@+id/futureListWeatherFragment"
         android:name="com.benrostudios.studyweather.ui.weather.future.list.FutureListFragment"
         android:label="future_list_weather_fragment"
-        tools:layout="@layout/future_list_weather_fragment" >
+        tools:layout="@layout/future_list_fragment" >
         <action
             android:id="@+id/actionDetail"
             app:destination="@id/futureDetailWeatherFragment" />

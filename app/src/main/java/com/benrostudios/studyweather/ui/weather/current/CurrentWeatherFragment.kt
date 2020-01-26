@@ -9,11 +9,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 
 import com.benrostudios.studyweather.R
-import com.benrostudios.studyweather.data.WeatherStackAPIService
-import com.benrostudios.studyweather.data.response.ConnectityInterceptorImpl
-import com.benrostudios.studyweather.data.response.CurrentWeatherResponse
-import com.benrostudios.studyweather.data.response.WeatherNetworkDataSource
-import com.benrostudios.studyweather.data.response.WeatherNetworkDataSourceImpl
+import com.benrostudios.studyweather.data.network.WeatherStackAPIService
+import com.benrostudios.studyweather.data.network.response.ConnectivityInterceptorImpl
+import com.benrostudios.studyweather.data.network.response.WeatherNetworkDataSourceImpl
 import kotlinx.android.synthetic.main.current_weather_fragment.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -41,7 +39,9 @@ class CurrentWeatherFragment : Fragment() {
 
 
         // TODO: Use the ViewModel
-        val apiService = WeatherStackAPIService(ConnectityInterceptorImpl(this.context!!))
+        val apiService = WeatherStackAPIService(
+            ConnectivityInterceptorImpl(this.context!!)
+        )
         val weatherNetworkDataSource = WeatherNetworkDataSourceImpl(apiService)
         weatherNetworkDataSource.downloadedCurrentWeather.observe(this, Observer {
             textViewOne.text = it.toString()

@@ -1,10 +1,10 @@
-package com.benrostudios.studyweather.data.response
+package com.benrostudios.studyweather.data.network.response
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.benrostudios.studyweather.data.WeatherStackAPIService
-import com.benrostudios.studyweather.internal.NoConnectivtyException
+import com.benrostudios.studyweather.data.network.WeatherStackAPIService
+import java.io.IOException
 
 class WeatherNetworkDataSourceImpl(
     private val weatherStackAPIService: WeatherStackAPIService
@@ -16,11 +16,12 @@ class WeatherNetworkDataSourceImpl(
 
     override suspend fun fetchCureentWeather(location: String, languageCode: String) {
        try{
-           val fetchedCurrenWeather = weatherStackAPIService.getCurrentWeather("London").await()
-           _downloadedCurrenWeather.postValue(fetchedCurrenWeather)
-       }
-       catch(e: NoConnectivtyException){
-           Log.e("Connectivity","No Internet Connection")
-       }
+            val fetchedCurrenWeather = weatherStackAPIService.getCurrentWeather(location).await()
+            _downloadedCurrenWeather.postValue(fetchedCurrenWeather)
+
+        }
+        catch(e: IOException){
+            Log.e("Connectivity","No Internet Connection  " + e.toString())
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.benrostudios.studyweather.data.response
+package com.benrostudios.studyweather.data.network.response
 
 import com.benrostudios.studyweather.data.db.entity.CurrentWeatherEntry
 import com.benrostudios.studyweather.data.db.entity.Location

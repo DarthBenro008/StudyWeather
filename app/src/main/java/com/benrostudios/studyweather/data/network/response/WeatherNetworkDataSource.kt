@@ -1,4 +1,4 @@
-package com.benrostudios.studyweather.data.response
+package com.benrostudios.studyweather.data.network.response
 
 import androidx.lifecycle.LiveData
 

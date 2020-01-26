@@ -12,18 +12,19 @@ import com.benrostudios.studyweather.R
 import com.benrostudios.studyweather.data.network.WeatherStackAPIService
 import com.benrostudios.studyweather.data.network.response.ConnectivityInterceptorImpl
 import com.benrostudios.studyweather.data.network.response.WeatherNetworkDataSourceImpl
+import com.benrostudios.studyweather.ui.base.ScopedFrag
 import kotlinx.android.synthetic.main.current_weather_fragment.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.closestKodein
+import org.kodein.di.generic.instance
 
-class CurrentWeatherFragment : Fragment() {
-
-    companion object {
-        fun newInstance() =
-            CurrentWeatherFragment()
-    }
-
+class CurrentWeatherFragment : ScopedFrag(), KodeinAware {
+    override val kodein by closestKodein()
+    private val viewModelFactory: CurrentWeatherViewModelFactory by instance()
     private lateinit var viewModel: CurrentWeatherViewModel
 
     override fun onCreateView(
@@ -35,20 +36,18 @@ class CurrentWeatherFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel::class.java)
+        viewModel =
+            ViewModelProviders.of(this, viewModelFactory)
+                .get(CurrentWeatherViewModel::class.java)
+        bindUI()
+    }
 
-
-        // TODO: Use the ViewModel
-        val apiService = WeatherStackAPIService(
-            ConnectivityInterceptorImpl(this.context!!)
-        )
-        val weatherNetworkDataSource = WeatherNetworkDataSourceImpl(apiService)
-        weatherNetworkDataSource.downloadedCurrentWeather.observe(this, Observer {
+    private fun bindUI() = launch{
+        val currentWeather = viewModel.weather.await()
+        currentWeather.observe(this@CurrentWeatherFragment, Observer {
+            if(it == null) return@Observer
             textViewOne.text = it.toString()
         })
-        GlobalScope.launch(Dispatchers.Main) {
-            weatherNetworkDataSource.fetchCureentWeather("London","en")
-        }
     }
 
 }
